@@ -28,8 +28,9 @@ namespace RigoFunc.DAL {
         /// <summary>
         /// Asynchronously saves all changes made in this unit of work to the database.
         /// </summary>
+        /// <param name="withHistory"><c>True</c> if save changes with auto record the change history.</param>
         /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous save operation. The task result contains the number of state entities written to database.</returns>
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(bool withHistory = false);
 
         /// <summary>
         /// Uses raw SQL queries to fetch the specified <typeparamref name="TEntity"/> data.

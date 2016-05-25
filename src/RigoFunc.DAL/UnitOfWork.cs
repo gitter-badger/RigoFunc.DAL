@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
+using RigoFunc.DAL.Extensions;
 using RigoFunc.DAL.Internal;
 
 namespace RigoFunc.DAL {
@@ -66,8 +67,13 @@ namespace RigoFunc.DAL {
         /// <summary>
         /// Asynchronously saves all changes made in this unit of work to the database.
         /// </summary>
-        /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous save operation. The task result contains the number of state entities written to database.</returns>
-        public async Task<int> SaveChangesAsync() {
+        /// <param name="withHistory"><c>True</c> if save changes with auto record the change history.</param>
+        /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous save operation. The task result contains the number of state entities written to database.</returns>
+        public async Task<int> SaveChangesAsync(bool withHistory = false) {
+            if (withHistory) {
+                return await _context.SaveChangesWithHistoryAsync();
+            }
+
             return await _context.SaveChangesAsync();
         }
 
