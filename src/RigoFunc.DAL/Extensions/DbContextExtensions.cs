@@ -23,23 +23,26 @@ namespace RigoFunc.DAL.Extensions {
                 ContractResolver = new EntityContractResolver(context),
             };
 
-            var entries = context.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged);
+            var entries = context.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged).ToArray();
             foreach (var entry in entries) {
                 var history = new ChangeHistory {
-                    SourceId = entry.PrimaryKey(),
                     TypeName = entry.Entity.GetType().Name,
                 };
 
                 switch (entry.State) {
                     case EntityState.Added:
+                        // REVIEW: what's the best way to do this?
+                        history.SourceId = "0";
                         history.Kind = ChangeKind.Added;
                         history.AfterJson = JsonConvert.SerializeObject(entry.Entity, Formatting.Indented, jsonSetting);
                         break;
                     case EntityState.Deleted:
+                        history.SourceId = entry.PrimaryKey();
                         history.Kind = ChangeKind.Deleted;
                         history.BeforeJson = JsonConvert.SerializeObject(entry.Entity, Formatting.Indented, jsonSetting);
                         break;
                     case EntityState.Modified:
+                        history.SourceId = entry.PrimaryKey();
                         history.Kind = ChangeKind.Modified;
                         history.BeforeJson = JsonConvert.SerializeObject(entry.Original(), Formatting.Indented, jsonSetting);
                         history.AfterJson = JsonConvert.SerializeObject(entry.Entity, Formatting.Indented, jsonSetting);
@@ -60,6 +63,10 @@ namespace RigoFunc.DAL.Extensions {
 
             var properties = type.GetTypeInfo().GetProperties();
             foreach (var property in properties) {
+                var nav = entry.Metadata.FindNavigation(property);
+                if(nav != null) {
+                    continue;
+                }
                 var original = entry.Property(property.Name).OriginalValue;
                 property.SetValue(entity, original);
             }
