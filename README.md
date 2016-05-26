@@ -68,19 +68,18 @@ To use *unit of work* provided by *RigoFunc.DAL* library, coding as
 
 ```C#
 public void ConfigureServices(IServiceCollection services) {
-    // Add framework services.
-    services.AddApplicationInsightsTelemetry(Configuration);
-
     services.AddDbContext<BloggingContext>(options => options.UseSqlServer(Configuration["Data:Default:ConnectionString"]));
-
+    // why this? 
     services.AddScoped<DbContext, BloggingContext>();
+
+    // Add unit of work
     services.AddScoped<IUnitOfWork, UnitOfWork>();
 
     services.AddMvc();
 }
 ```
 
-## configure connectionstring using appsettings.json
+## Configure connectionstring using appsettings.json
 ```Json
 {
   "Data": {
