@@ -1,4 +1,6 @@
 # RigoFunc.DAL
+
+[![Join the chat at https://gitter.im/xyting/RigoFunc.DAL](https://badges.gitter.im/xyting/RigoFunc.DAL.svg)](https://gitter.im/xyting/RigoFunc.DAL?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 This repo contains the data access layer library that inner implementation use repository and unit of work pattern.
 The *highlight* feature is *auto recording data change history*
 
